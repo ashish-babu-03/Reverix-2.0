@@ -47,6 +47,7 @@ class SecurityConfig(
             .authorizeHttpRequests { auth ->
                 auth
                     .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
+                    .requestMatchers("/api/health").permitAll()
                     .requestMatchers("/api/auth/**").permitAll()
                     .requestMatchers("/api/movies/**").permitAll()
                     .requestMatchers("/api/theatres/**").permitAll()
