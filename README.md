@@ -1,137 +1,397 @@
-# REVERIX 2.0
-```text
-██████╗ ███████╗██╗   ██╗███████╗██████╗ ██╗██╗  ██╗    ██████╗  ██████╗ 
-██╔══██╗██╔════╝██║   ██║██╔════╝██╔══██╗██║╚██╗██╔╝    ╚════██╗██╔═████╗
-██████╔╝█████╗  ██║   ██║█████╗  ██████╔╝██║ ╚███╔╝      █████╔╝██║██╔██║
-██╔══██╗██╔════╝╚██╗ ██╔╝██╔════╝██╔══██╗██║ ██╔██╗     ██╔═══╝ ██║██║██║
-██║  ██║███████╗ ╚████╔╝ ███████╗██║  ██║██║██╔╝ ██╗    ███████╗╚██████╔╝
-╚═╝  ╚═╝╚══════╝  ╚═══╝  ╚══════╝╚═╝  ╚═╝╚═╝╚═╝  ╚═╝    ╚══════╝ ╚═════╝ 
+<div align="center">
+
+<br/>
+
 ```
-> **Where mood meets movies. AI-powered. Production-grade.**
-
----
-
-[![Kotlin](https://img.shields.io/badge/Kotlin-7F52FF?style=for-the-badge&logo=kotlin&logoColor=white)](https://kotlinlang.org/)
-[![Spring Boot](https://img.shields.io/badge/Spring_Boot-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white)](https://spring.io/projects/spring-boot)
-[![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://www.mysql.com/)
-[![Redis](https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white)](https://redis.io/)
-[![WebSocket](https://img.shields.io/badge/WebSocket-010101?style=for-the-badge&logo=socket.io&logoColor=white)](#)
-
-[![JWT](https://img.shields.io/badge/JWT-black?style=for-the-badge&logo=JSON%20web%20tokens)](https://jwt.io/)
-[![Liquibase](https://img.shields.io/badge/Liquibase-2962FF?style=for-the-badge&logo=liquibase&logoColor=white)](https://www.liquibase.org/)
-[![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
-[![OpenRouter AI](https://img.shields.io/badge/OpenRouter_AI-FF6B6B?style=for-the-badge)](#)
-[![Resilience4j](https://img.shields.io/badge/Resilience4j-F7BD00?style=for-the-badge)](#)
-
----
-
-## 📽️ What is Reverix 2.0?
-Reverix 2.0 is a premium, high-concurrency movie booking platform that redefines discovery through an AI-powered cinematic concierge. Built for speed and reliability, it leverages distributed locking to manage real-time seat availability across diverse theaters. By bridging the gap between emotional mood and movie data, it offers a deeply personalized experience that goes beyond traditional booking engines.
-
----
-
-## 🏗️ Architecture
-Reverix 2.0 is built on **Hexagonal Architecture (Ports & Adapters)** to ensure that core business logic remains isolated, testable, and independent of external infrastructure.
-
-*   **Pure Domain Core**: Models and services contain zero framework dependencies, protecting the integrity of the business rules.
-*   **Decoupled Side-Effects**: External systems (DB, AI, Cache) are integrated via defined Output Ports, allowing for seamless infrastructure swaps.
-*   **Event-Driven Orchestration**: Complex cross-domain flows are managed by Application Orchestrators and asynchronous listeners.
-*   **Stateless Scaling**: Security and session management are moved to the infrastructure perimeter using JWT and externalized caching.
-
-```text
-[REST Controllers] ──► [Input Ports] ──► [Domain Services]
-      │                                         │
-[WebSocket]           [Domain Models]    [Output Ports]
-      │                                         │
-[JWT Security] ◄───────────────────── [Infrastructure Adapters]
-                                 (MySQL | Redis | OpenRouter AI)
+██████╗ ███████╗██╗   ██╗███████╗██████╗ ██╗██╗  ██╗
+██╔══██╗██╔════╝██║   ██║██╔════╝██╔══██╗██║╚██╗██╔╝
+██████╔╝█████╗  ██║   ██║█████╗  ██████╔╝██║ ╚███╔╝
+██╔══██╗██╔══╝  ╚██╗ ██╔╝██╔══╝  ██╔══██╗██║ ██╔██╗
+██║  ██║███████╗ ╚████╔╝ ███████╗██║  ██║██║██╔╝ ██╗
+╚═╝  ╚═╝╚══════╝  ╚═══╝  ╚══════╝╚═╝  ╚═╝╚═╝╚═╝  ╚═╝
 ```
 
+### ✦ Cinema Curated For You — Powered by AI, Built for Humans ✦
+
+<br/>
+
+[![Live Demo](https://img.shields.io/badge/🎬%20LIVE%20DEMO%20→-reverix--2--0.onrender.com-e50914?style=for-the-badge&labelColor=000000)](https://reverix-2-0.onrender.com/)
+&nbsp;
+[![GitHub](https://img.shields.io/badge/SOURCE%20CODE-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/ashish-babu-03/Reverix-2.0)
+
+<br/>
+
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-6DB33F?style=flat-square&logo=springboot&logoColor=white)
+![Kotlin](https://img.shields.io/badge/Kotlin-7F52FF?style=flat-square&logo=kotlin&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=mysql&logoColor=white)
+![Redis](https://img.shields.io/badge/Redis-DC382D?style=flat-square&logo=redis&logoColor=white)
+![Llama 3.3](https://img.shields.io/badge/Llama%203.3-041028?style=flat-square&logo=meta&logoColor=white)
+![Render](https://img.shields.io/badge/Render-46E3B7?style=flat-square&logo=render&logoColor=black)
+![Liquibase](https://img.shields.io/badge/Liquibase-2962FF?style=flat-square)
+![Resilience4j](https://img.shields.io/badge/Resilience4j-0055AA?style=flat-square)
+
+<br/>
+
+> *Built by a backend engineer who got laid off in March 2026.*
+> *Shipped to production in May. Because building beats waiting.*
+
+<br/>
+
+</div>
+
 ---
 
-## 🌟 Key Features
-- **🤖 AI Movie Concierge**: Real-time natural language discovery via WebSocket and LLM integration (OpenRouter), providing instant movie recommendations.
-- **🔒 Distributed Seat Locking**: Atomic seat reservation system powered by Redis with a strict 600s TTL, ensuring zero double-bookings in high-traffic scenarios.
-- **🛡️ Idempotent Booking Engine**: Robust transaction management using unique idempotency keys to prevent duplicate charges and records.
-- **⚡ Circuit Breaker Resilience**: Integrated Resilience4j fallback mechanisms for external AI calls, maintaining uptime even during third-party outages.
-- **🪙 Rev-Coins Reward System**: A tiered loyalty ledger that incentivizes user engagement through bookings and reviews.
-- **🔐 JWT Stateless Auth**: Secure, scalable authentication flow with custom filters for role-based access control.
-- **🌱 Auto-Seeding TMDb Sync**: Intelligent startup routine that fetches, formats, and seeds the latest cinematic data directly from the TMDb API.
-- **📜 Versioned Migrations**: Comprehensive database evolution tracking using Liquibase for reliable multi-environment deployments.
+## What is Reverix?
+
+Reverix is a **full-stack, production-grade movie booking platform** — not a tutorial clone, not a CRUD demo. It is a real product with a real architecture, real engineering decisions, and a real opinion about how cinema should feel.
+
+It handles atomic seat locking, idempotency-guaranteed bookings, AI-powered mood recommendations via Rev-Bot, and a gamified coin reward system inspired by mobile gaming economies — applied to cinema for the first time.
+
+**Every flow works. End to end. In production. Right now.**
+
+**[→ Open Reverix and try it live](https://reverix-2-0.onrender.com/)**
 
 ---
 
-## 🚀 API Endpoints
-| Method | Endpoint | Auth | Description |
-| :--- | :--- | :--- | :--- |
-| **POST** | `/api/auth/register` | Public | Create a new account |
-| **POST** | `/api/auth/login` | Public | Authenticate and receive JWT |
-| **GET** | `/api/movies` | Public | List all movies with ratings |
-| **GET** | `/api/movies/{id}` | Public | Get detailed movie metadata |
-| **POST** | `/api/bookings/lock` | JWT | Lock seats for 10 minutes |
-| **POST** | `/api/bookings/confirm` | JWT | Finalize payment and booking |
-| **GET** | `/api/bookings/my-bookings` | JWT | View personal booking history |
-| **GET** | `/api/coins/balance` | JWT | Check Re-coin reward balance |
-| **POST** | `/api/watchlist/{id}` | JWT | Add movie to personal watchlist |
-| **GET** | `/api/reviews/average/{id}` | Public | Get community average rating |
+## Architecture
+
+Reverix is built on **Hexagonal (Ports & Adapters) Architecture**. The domain layer has zero knowledge of Spring, MySQL, Redis, or anything external. Swap the entire infrastructure — the business logic doesn't care.
+
+```
+╔══════════════════════════════════════════════════════════════════════════╗
+║                        R E V E R I X  2 . 0                              ║
+╠══════════════════════════════════════════════════════════════════════════╣
+║                                                                          ║
+║  DRIVING SIDE (Input Adapters)         DRIVEN SIDE (Output Adapters)     ║
+║  ──────────────────────────────        ─────────────────────────────     ║
+║  ┌─────────────┐                                      ┌──────────────┐   ║
+║  │  REST API   │                                      │  PostgreSql  │   ║
+║  │ Controllers │────────────────────────────────────▶ │  (Liquibase) │   ║
+║  └─────────────┘         ┌───────────────────┐        └──────────────┘   ║
+║                          │                   │                           ║
+║  ┌─────────────┐         │   DOMAIN LAYER    │         ┌──────────────┐  ║
+║  │  WebSocket  │────────▶│                   │───────▶│    Redis     │  ║
+║  │  (Rev-Bot)  │         │  BookSeatUseCase  │         │  Seat Locks  │  ║
+║  └─────────────┘         │  CoinUseCase      │         └──────────────┘  ║
+║                          │  ReviewUseCase    │                           ║
+║  ┌─────────────┐         │  WatchlistUseCase │         ┌──────────────┐  ║
+║  │ Vanilla JS  │────────▶│  RecommendUseCase │───────▶ │  Llama 3.3  │  ║
+║  │  Frontend   │         │                   │         │   (Rev-Bot)  │  ║
+║  └─────────────┘         │  Pure Kotlin/Java │         └──────────────┘  ║
+║                          │  Zero frameworks  │                           ║
+║                          └───────────────────┘         ┌──────────────┐  ║
+║                                    │                   │     TMDB     │  ║
+║                                    └─────────────────▶ │  Movie Data  │  ║
+║                                                        └──────────────┘  ║
+║  ┌───────────────────────────────────────────────────────────────────┐   ║
+║  │  Resilience4j — Circuit Breaker (TMDB) · Rate Limiter (AI)        │   ║
+║  │  Health Controller · Email Alerts on Downtime · Render Hosting    │   ║
+║  └───────────────────────────────────────────────────────────────────┘   ║
+╚══════════════════════════════════════════════════════════════════════════╝
+```
 
 ---
 
-## 🛠️ Local Setup
-Follow these steps to get Reverix 2.0 running on your machine:
+## Feature Walkthrough
 
-**Prerequisites**: Java 17, MySQL 8.0, Redis 6+, Docker Desktop.
+### 🔐 Auth — JWT, Stateless, Role-Based
+Register or login. Get a JWT. Every protected endpoint validates it at the Spring Security filter level. Roles: `USER` and `ADMIN`. Session state lives in the token, not the server.
 
-### Step 1: Clone the Repo
+---
+
+### 🎬 Discovery — Real Movies, Real Data
+
+```
+TMDB API ──▶ MovieRepositoryAdapter ──▶ Cache ──▶ Movie Grid (UI)
+                    │
+                    └──▶ Circuit Breaker (Resilience4j) ──▶ Fallback
+```
+
+Real movie posters. Genre filters. Language filters. Live search. Click any movie → detail drawer opens with rating, duration, genre tags, and two actions: **Watchlist** or **Book Tickets**. Watchlist persists per user in MySQL.
+
+---
+
+### 💺 The Booking Engine — Where It Gets Serious
+
+Race conditions, double-bookings, and payment retries are all handled.
+
+```
+① User selects seats on the seat map
+         │
+         ▼
+② POST /api/bookings/lock
+         │
+         ▼
+③ Redis SETNX — atomic seat lock (TTL: 10 minutes)
+   Seats invisible to all other users for 10 min
+         │
+         ▼
+④ Idempotency key check
+   Same request twice = same response, one booking
+         │
+         ▼
+⑤ Payment (UPI QR flow)
+         │
+         ▼
+⑥ POST /api/bookings/confirm
+         │
+         ▼
+⑦ MySQL persistence + BookingConfirmedEvent published
+         │
+         ▼
+⑧ CoinUseCase triggered → coins credited to user ✅
+```
+
+**Engineering decisions that matter:**
+- `Redis SETNX` for atomic locking — no race condition possible at any scale
+- `idempotencyKey` on every booking — rage-clicking "Pay" 10 times = 1 booking, not 10
+- `SeatAlreadyLockedException` — clean domain exception, not a 500
+- Soft delete pattern — bookings never hard deleted, full audit trail preserved
+
+---
+
+### 🤖 Rev-Bot — AI That Actually Understands You
+
+Not a search bar. Not a filter. Rev-Bot understands **mood**.
+
+```
+User: "I'm feeling sad, want something hopeful"
+         │
+         ▼
+WebSocket message via STOMP broker
+         │
+         ▼
+RecommendationDomainService + Llama 3.3 AI
+         │
+         ▼
+Formatted response with clickable Movie Cards
+         │
+         ▼
+User clicks a card → straight into the booking flow
+```
+
+Real-time. Conversational. The recommendations come back as interactive cards you can book directly from chat.
+
+---
+
+### 🪙 Coin Reward System — The Product Idea
+
+Inspired by mobile gaming economies. Applied to cinema.
+
+| Action | Coins |
+|:---|:---:|
+| Book a ticket | +50 |
+| Write a review | +20 |
+| Watch an ad | +10 |
+| Redeem on booking | -N |
+
+**The loop:** Book a movie → earn coins → review it → earn more → watch an ad → earn more → redeem on the next movie. Users stay in the ecosystem. Theatres earn ad revenue. Everyone wins. This isn't a feature — it's a monetization model baked into the architecture from day one.
+
+---
+
+### 🏥 Production Health — Because This Isn't a Demo
+
 ```bash
+GET /health
+# → { "status": "UP", "database": "UP", "redis": "UP" }
+```
+
+- Health endpoint for uptime monitoring
+- Email alerts fire when the endpoint goes down
+- Resilience4j circuit breaker on TMDB — if TMDB is slow, Reverix isn't
+- Rate limiter on AI recommendation requests — no runaway costs
+- Deployed on Render with real logs and production-like environment
+
+---
+
+## Database Schema
+
+```
+┌─────────────┐       ┌─────────────┐       ┌─────────────┐
+│    users    │       │    movies   │       │   theatres  │
+│─────────────│       │─────────────│       │─────────────│
+│ id (PK)     │       │ id (PK)     │       │ id (PK)     │
+│ email ◀idx  │       │ title       │   ┌──▶│ name        │
+│ passwordHash│       │ genre       │   │   │ city        │
+│ role        │       │ moodTags    │   │   │ vibe        │
+│ createdAt   │       │ language    │   │   └─────────────┘
+└──────┬──────┘       │ rating      │   │
+       │              │ posterUrl   │   │   ┌─────────────┐
+       │              └──────┬──────┘   │   │    shows    │
+       │                     │          │   │─────────────│
+       │                     └──────────┼──▶│ movie_id(FK)│
+       │                                └───│theatre_id   │
+       │                                    │ startTime   │
+┌──────▼──────┐   ┌──────────────────┐      │ endTime     │
+│  bookings   │   │  booking_seats   │      │ totalSeats  │
+│─────────────│   │──────────────────│      └──────┬──────┘
+│ id (PK)     │◀──│ booking_id (FK)  │             │
+│ user_id(FK) │   │ seat_id (FK) ────┼──────┐      │
+│ show_id(FK) │   └──────────────────┘      │      │
+│ status      │                      ┌──────▼──────▼───┐
+│idempotencyKey                      │     seats       │
+└─────────────┘                      │─────────────────│
+                                     │ id (PK)         │
+                                     │ show_id(FK) ◀idx│
+                                     │ seatNumber      │
+                                     │ zone            │
+                                     │ status          │
+                                     └─────────────────┘
+```
+
+All migrations managed by **Liquibase** — every schema change is versioned, repeatable, and production-safe.
+
+---
+
+## Tech Stack
+
+| Layer | Technology                   | Why |
+|:---|:-----------------------------|:---|
+| **Backend** | Spring Boot, Kotlin/Java     | Production-grade, battle-tested |
+| **Architecture** | Hexagonal (Ports & Adapters) | Domain fully decoupled from infra |
+| **Database** | Postgresql                   | Relational integrity for bookings |
+| **Migrations** | Liquibase                    | Versioned, production-safe schema changes |
+| **Cache / Locking** | Redis                        | Atomic seat holds via SETNX + TTL |
+| **AI** | Llama 3.3 API               | Mood-based movie recommendations |
+| **Real-time** | WebSockets (STOMP)           | Rev-Bot live chat |
+| **Security** | Spring Security + JWT        | Stateless, role-based auth |
+| **Resilience** | Resilience4j                 | Circuit breaker + rate limiter |
+| **Movie Data** | TMDB API                     | Real posters, real metadata |
+| **Frontend** | Vanilla HTML / CSS / JS      | No framework bloat needed |
+| **Deployment** | Render                       | Production hosting + health monitoring |
+
+---
+
+## Run Locally
+
+### Prerequisites
+- Java 17+
+- PostgreSql 11+
+- Redis (or Docker)
+- Maven
+
+### Setup
+
+```bash
+# Clone
 git clone https://github.com/ashish-babu-03/Reverix-2.0.git
 cd Reverix-2.0
+
+# Create the database using the psql utility
+psql -U postgres -c "CREATE DATABASE reverix;"
+
+# Configure
+cp src/main/resources/application.properties.example \
+   src/main/resources/application.properties
+# Edit application.properties with your DB, Redis, TMDB, Llama 3.3 , JWT values
+
+# Start Redis (if not running)
+docker run -d -p 6379:6379 redis:alpine
+
+# Run the backend
+./mvnw spring-boot:run
+
+# Open the frontend
+open static/index.html
 ```
 
-### Step 2: Set Environment Variables
-Create an `.env` file or export the following:
+### Environment Variables
+
+| Variable | Where to get it                                                  |
+|:---|:-----------------------------------------------------------------|
+| `DB_URL` / `DB_USERNAME` / `DB_PASSWORD` | Your local PostgreSql                                            |
+| `REDIS_URL` | localhost:6379 or Docker                                         |
+| `TMDB_API_KEY` | [themoviedb.org](https://www.themoviedb.org/settings/api) — free |
+| `ANTHROPIC_API_KEY` | [console.anthropic.com](https://console.anthropic.com)           |
+| `JWT_SECRET` | Any long random string                                           |
+
+### Health check
+
 ```bash
-export OPENROUTER_API_KEY=your_openrouter_key
-export TMDB_API_KEY=your_tmdb_key
-export DB_PASSWORD=your_mysql_password
+curl http://localhost:8080/health
+# { "status": "UP", "database": "UP", "redis": "UP" }
 ```
-
-### Step 3: Start Services with Docker
-```bash
-docker-compose up -d
-```
-
-### Step 4: Run the Application
-```bash
-./gradlew bootRun
-```
-
-### Step 5: Verify Deployment
-The application will automatically run Liquibase migrations and seed TMDb data.
-Visit: [http://localhost:8080](http://localhost:8080)
 
 ---
 
-## 🌍 Environment Variables
-| Variable | Required | Default | Description |
-| :--- | :--- | :--- | :--- |
-| `SPRING_DATASOURCE_URL` | Yes | `jdbc:mysql://localhost:3306/reverix` | DB Connection String |
-| `SPRING_DATA_REDIS_HOST` | Yes | `localhost` | Redis instance host |
-| `TMDB_API_KEY` | Yes | - | API key for Movie Seeding |
-| `OPENROUTER_API_KEY` | Yes | - | API key for AI Chatbot |
-| `JWT_SECRET` | No | `super-secret-key` | Secret for token signing |
+## API Reference
+
+### Public
+
+```
+GET  /api/movies           All movies (TMDB-backed, cached)
+GET  /api/movies/{id}      Movie detail
+GET  /api/shows            Available shows
+POST /api/auth/register    Register → returns JWT
+POST /api/auth/login       Login → returns JWT
+GET  /health               Service health
+```
+
+### Protected (Bearer token required)
+
+```
+POST /api/bookings/lock    Lock seats — Redis, 10 min TTL
+POST /api/bookings/confirm Confirm booking after payment
+GET  /api/bookings         My booking history
+POST /api/watchlist        Add to watchlist
+GET  /api/watchlist        My watchlist
+GET  /api/coins/balance    Coin balance
+WS   /ws/chat              Rev-Bot — real-time STOMP chat
+```
 
 ---
 
-## 💡 What I Learned
-Building Reverix 2.0 was a deep dive into engineering resilience and architectural purity. My key takeaways:
-- **Hexagonal Architecture is worth the boilerplate**: It felt like extra work at first, but the ability to test domain logic in isolation without starting a Spring context is a game-changer for developer speed.
-- **Redis for Atomic State**: Implementing distributed locking taught me the importance of atomic operations. Managing TTLs for seat holds is far superior to database-level locks for user experience.
-- **Idempotency is non-negotiable**: In a booking system, handling duplicate requests gracefully is critical. Designing the system to be idempotent from day one saved countless potential data headaches.
-- **Designing for Failure**: Integrating circuit breakers for AI calls made the application "self-healing." It taught me to treat every third-party integration as a potential point of failure.
-- **AI as a First-Class Citizen**: WebSocket-based AI integration is about more than just chat; it's about making the UI reactive to intelligent suggestions in real-time.
+## Engineering Lessons
+
+**On Hexagonal Architecture** — When I had to swap how TMDB data was fetched, the domain layer didn't change at all. Zero. The architecture isn't complexity for its own sake. It's a contract that survives infrastructure changes.
+
+**On Redis seat locking** — The seat selection problem is a classic distributed concurrency problem. Two users, same seat, same millisecond. `Redis SETNX` is atomic at the server level — only one writer wins. The TTL guarantees seats are never permanently orphaned if payment doesn't complete.
+
+**On idempotency keys** — I learned this building a billing pipeline at work. Money can never be wrong. A user who retries a payment should get the same result, not a duplicate charge. Every booking carries a `idempotencyKey`. Same key = same response. Always.
+
+**On Resilience4j** — TMDB can go down. Openrouter can be slow. Production systems don't crash when their dependencies do — they degrade gracefully. If TMDB is flaky, the movie list falls back. The user never sees a 500.
+
+**On deployment** — It takes longer than building. Always.
 
 ---
 
-**Built with purpose by [Ashish Babu Z](https://github.com/ashish-babu-03)**
-> 🎬 Curating cinema, one mood at a time.
+## Roadmap
+
+- [ ] Real payment gateway — Razorpay integration
+- [ ] Email / SMS notifications — `BookingEventListener` skeleton already wired
+- [ ] TMDB periodic sync — `@Scheduled` job for nightly catalogue refresh
+- [ ] Social layer — movie buff profiles, review feeds, watch parties
+- [ ] Theatre sorting by snack prices *(yes, this is actually planned)*
+- [ ] Mobile app
+
+---
+
+## About the Builder
+
+**Ashish Babu** — Backend Engineer
+
+3 years at SuperOps.ai (Series C, $54M raised) building distributed systems at scale — Apache Pulsar, Kafka, SAML 2.0/SSO migrations for 1000+ enterprise clients, billing pipelines where money can never be wrong.
+
+Stack: Kotlin · Java · Spring Boot · MySQL · PostgreSql · Redis · Kafka · Apache Pulsar · AWS S3 · SAML/SSO
+
+Available immediately.
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/ashish-babu-z)
+[![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/ashish-babu-03)
+[![Email](https://img.shields.io/badge/Gmail-EA4335?style=for-the-badge&logo=gmail&logoColor=white)](mailto:ashish.babu.sde@gmail.com)
+
+---
+
+<div align="center">
+
+**[→ Try Reverix Live](https://reverix-2-0.onrender.com/)**
+
+<br/>
+
+*Built with Spring Boot · Redis · Llama 3.3 AI · Hexagonal Architecture · Pure stubbornness*
+
+<br/>
+
+⭐ If this repo helped you think about architecture differently, drop a star
+
+</div>
