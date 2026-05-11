@@ -308,8 +308,16 @@ open static/index.html
 ### Health check
 
 ```bash
-curl http://localhost:8080/health
-# { "status": "UP", "database": "UP", "redis": "UP" }
+# Verify system integrity (Postgres + Redis)
+curl https://reverix-2-0.onrender.com/api/health
+
+# Expected Response:
+# {
+#   "status": "UP",
+#   "database": "UP",
+#   "redis": "UP",
+#   "timestamp": 1715462400000
+# }
 ```
 
 ---
