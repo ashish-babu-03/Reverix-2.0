@@ -1,0 +1,77 @@
+databaseChangeLog:
+  - changeSet:
+      id: seed-theatres
+      author: Ashish Babu Z
+      changes:
+        - insert:
+            tableName: theatres
+            columns:
+              - column:
+                  name: name
+                  value: PVR Phoenix MarketCity
+              - column:
+                  name: city
+                  value: Chennai
+              - column:
+                  name: vibe
+                  value: PREMIERE
+        - insert:
+            tableName: theatres
+            columns:
+              - column:
+                  name: name
+                  value: Rohini Silver Screens
+              - column:
+                  name: city
+                  value: Chennai
+              - column:
+                  name: vibe
+                  value: CELEBRATION
+        - insert:
+            tableName: theatres
+            columns:
+              - column:
+                  name: name
+                  value: Sathyam Cinemas
+              - column:
+                  name: city
+                  value: Chennai
+              - column:
+                  name: vibe
+                  value: DATE_NIGHT
+        - insert:
+            tableName: theatres
+            columns:
+              - column:
+                  name: name
+                  value: PVR Forum Mall
+              - column:
+                  name: city
+                  value: Bangalore
+              - column:
+                  name: vibe
+                  value: PREMIERE
+        - insert:
+            tableName: theatres
+            columns:
+              - column:
+                  name: name
+                  value: Inox Garuda Mall
+              - column:
+                  name: city
+                  value: Bangalore
+              - column:
+                  name: vibe
+                  value: FAMILY
+        - insert:
+            tableName: theatres
+            columns:
+              - column:
+                  name: name
+                  value: PVR Juhu
+              - column:
+                  name: city
+                  value: Mumbai
+              - column:
+                  name: vibe
+                  value: DATE_NIGHT

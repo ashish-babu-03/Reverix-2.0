@@ -1,0 +1,436 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-users
+      author: Ashish Babu Z
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: email
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: password_hash
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: role
+                  type: VARCHAR(50)
+                  defaultValue: USER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: create-movies
+      author: Ashish Babu Z
+      changes:
+        - createTable:
+            tableName: movies
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: title
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: genre
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: mood_tags
+                  type: VARCHAR(500)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: language
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: rating
+                  type: DOUBLE PRECISION
+                  constraints:
+                    nullable: false
+              - column:
+                  name: duration
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: poster_url
+                  type: VARCHAR(500)
+
+  - changeSet:
+      id: create-theatres
+      author: Ashish Babu Z
+      changes:
+        - createTable:
+            tableName: theatres
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: city
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: vibe
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: create-shows
+      author: Ashish Babu Z
+      changes:
+        - createTable:
+            tableName: shows
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: movie_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: theatre_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: start_time
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: end_time
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: total_seats
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: available_seats
+                  type: INT
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: shows
+            baseColumnNames: movie_id
+            referencedTableName: movies
+            referencedColumnNames: id
+            constraintName: fk_shows_movie
+        - addForeignKeyConstraint:
+            baseTableName: shows
+            baseColumnNames: theatre_id
+            referencedTableName: theatres
+            referencedColumnNames: id
+            constraintName: fk_shows_theatre
+
+  - changeSet:
+      id: create-seats
+      author: Ashish Babu Z
+      changes:
+        - createTable:
+            tableName: seats
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: show_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: seat_number
+                  type: VARCHAR(10)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: zone
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: VARCHAR(20)
+                  defaultValue: AVAILABLE
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: seats
+            baseColumnNames: show_id
+            referencedTableName: shows
+            referencedColumnNames: id
+            constraintName: fk_seats_show
+        - createIndex:
+            tableName: seats
+            indexName: idx_seats_show_id
+            columns:
+              - column:
+                  name: show_id
+
+  - changeSet:
+      id: create-bookings
+      author: Ashish Babu Z
+      changes:
+        - createTable:
+            tableName: bookings
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: show_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: seat_ids
+                  type: VARCHAR(500)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: VARCHAR(20)
+                  defaultValue: PENDING
+                  constraints:
+                    nullable: false
+              - column:
+                  name: idempotency_key
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: bookings
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_bookings_user
+        - addForeignKeyConstraint:
+            baseTableName: bookings
+            baseColumnNames: show_id
+            referencedTableName: shows
+            referencedColumnNames: id
+            constraintName: fk_bookings_show
+        - createIndex:
+            tableName: bookings
+            indexName: idx_bookings_user_id
+            columns:
+              - column:
+                  name: user_id
+        - createIndex:
+            tableName: bookings
+            indexName: idx_bookings_idempotency_key
+            columns:
+              - column:
+                  name: idempotency_key
+
+  - changeSet:
+      id: create-booking-seats
+      author: Ashish Babu Z
+      changes:
+        - createTable:
+            tableName: booking_seats
+            columns:
+              - column:
+                  name: booking_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: seat_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            tableName: booking_seats
+            columnNames: booking_id, seat_id
+            constraintName: pk_booking_seats
+        - addForeignKeyConstraint:
+            baseTableName: booking_seats
+            baseColumnNames: booking_id
+            referencedTableName: bookings
+            referencedColumnNames: id
+            constraintName: fk_booking_seats_booking
+        - addForeignKeyConstraint:
+            baseTableName: booking_seats
+            baseColumnNames: seat_id
+            referencedTableName: seats
+            referencedColumnNames: id
+            constraintName: fk_booking_seats_seat
+
+  - changeSet:
+      id: create-coin-transactions
+      author: Ashish Babu Z
+      changes:
+        - createTable:
+            tableName: coin_transactions
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: amount
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: type
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: VARCHAR(255)
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: create-reviews
+      author: Ashish Babu Z
+      changes:
+        - createTable:
+            tableName: reviews
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: movie_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: rating
+                  type: DOUBLE PRECISION
+                  constraints:
+                    nullable: false
+              - column:
+                  name: comment
+                  type: VARCHAR(1000)
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: create-watchlist
+      author: Ashish Babu Z
+      changes:
+        - createTable:
+            tableName: watchlist_items
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: movie_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: added_at
+                  type: TIMESTAMP
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
