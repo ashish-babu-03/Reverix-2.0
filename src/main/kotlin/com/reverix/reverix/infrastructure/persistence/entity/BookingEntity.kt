@@ -8,23 +8,21 @@ import java.time.LocalDateTime
 data class BookingEntity(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
-    val userId: Long,
-    val showId: Long,
-    val seatIds: String,
+    val seatIds: String = "",
     val status: String,
     @Column(unique = true)
     val idempotencyKey: String,
     val createdAt: LocalDateTime,
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId", insertable = false, updatable = false)
-    val user: UserEntity? = null,
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    val user: UserEntity,
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "showId", insertable = false, updatable = false)
-    val show: ShowEntity? = null,
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "show_id")
+    val show: ShowEntity,
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "booking_seats",
         joinColumns = [JoinColumn(name = "booking_id")],

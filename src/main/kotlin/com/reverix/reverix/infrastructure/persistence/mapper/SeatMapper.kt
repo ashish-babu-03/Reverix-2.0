@@ -2,30 +2,36 @@ package com.reverix.reverix.infrastructure.persistence.mapper
 
 import com.reverix.reverix.domain.model.*
 import com.reverix.reverix.infrastructure.persistence.entity.SeatEntity
+import com.reverix.reverix.infrastructure.persistence.entity.ShowEntity
+import com.reverix.reverix.infrastructure.persistence.repository.ShowJpaRepository
 import org.springframework.stereotype.Component
-import java.time.LocalDateTime
 
 @Component
-class SeatMapper {
+class SeatMapper(
+    private val showJpaRepository: ShowJpaRepository,
+    private val showMapper: ShowMapper
+) {
     fun SeatEntity.toDomain(): Seat {
-        val dummyMovie = Movie(title = "", genre = "", moodTags = emptyList(), language = "", rating = null, duration = 0, posterUrl = null)
-        val dummyTheatre = Theatre(name = "", city = "", vibe = Vibe.SILENT)
-        val dummyShow = Show(id = showId, movie = dummyMovie, theatre = dummyTheatre, startTime = LocalDateTime.now(), endTime = LocalDateTime.now(), totalSeats = 0, availableSeats = 0)
-        
-        return Seat(
-            id = id,
-            show = dummyShow,
-            seatNumber = seatNumber,
-            zone = Zone.valueOf(zone),
-            status = SeatStatus.valueOf(status)
-        )
+        with(showMapper) {
+            return Seat(
+                id = id,
+                show = show.toDomain(),
+                seatNumber = seatNumber,
+                zone = Zone.valueOf(zone),
+                status = SeatStatus.valueOf(status)
+            )
+        }
     }
 
-    fun Seat.toEntity() = SeatEntity(
-        id = id ?: 0,
-        showId = show.id ?: 0,
-        seatNumber = seatNumber,
-        zone = zone.name,
-        status = status.name
-    )
+    fun Seat.toEntity(): SeatEntity {
+        val showEntity = showJpaRepository.findById(show.id ?: 0)
+            .orElseThrow { IllegalStateException("Show not found: ${show.id}") }
+        return SeatEntity(
+            id = id ?: 0,
+            show = showEntity,
+            seatNumber = seatNumber,
+            zone = zone.name,
+            status = status.name
+        )
+    }
 }

@@ -285,7 +285,7 @@
       display: flex; flex-direction: column; align-items: center; justify-content: center;
     }
     .screen-svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
-    .screen-text { font-size: 11px; font-weight: 800; color: var(--muted); letter-spacing: 6px; margin-top: 30px; }px; }
+    .screen-text { font-size: 11px; font-weight: 800; color: var(--muted); letter-spacing: 6px; margin-top: 30px; }
 
     /* UPI Modal */
     .upi-modal {
@@ -515,8 +515,7 @@
       <div class="user-section" id="user-section">
         <div class="coin-balance" onclick="toggleCoins()">
           <span>🪙</span> <span id="coin-count">0</span>
-          <!-- Re-coins Panel -->
-          <div class="recoins-panel" id="recoins-panel" style="display:none; position:absolute; bottom:100%; left:0; width:280px; background:var(--surface); border:1px solid var(--gold); border-radius:10px; padding:20px; margin-bottom:20px; box-shadow:var(--shadow);">
+          <!-- Re-coins Panel --><div class="recoins-panel" id="recoins-panel" style="display:none; position:absolute; bottom:100%; left:0; width:280px; background:var(--surface); border:1px solid var(--gold); border-radius:10px; padding:20px; margin-bottom:20px; box-shadow:0 4px 20px rgba(0,0,0,0.3);">
             <div style="font-size:12px; color:var(--muted); margin-bottom:4px;">Total Balance</div>
             <div style="font-size:24px; font-weight:800; color:var(--gold); margin-bottom:16px;">🪙 <span id="p-coin-count">0</span></div>
             <div style="height:1px; background:var(--border); margin-bottom:16px;"></div>
@@ -1002,124 +1001,131 @@
       renderTheatres();
     }
 
-    function renderTheatres() {
+    async function renderTheatres() {
       const list = document.getElementById('theatres-list-container');
+      list.innerHTML = '<div style="text-align:center; padding:40px; color:var(--muted);">Loading shows...</div>';
+
+      const movieId = state.currentMovie.id;
+      const shows = await api(`/shows/movie/${movieId}`);
+
+      if (!shows || !shows.length) {
+        list.innerHTML = '<div style="text-align:center; padding:40px; color:var(--muted);">No shows available for this movie.</div>';
+        return;
+      }
+
       list.innerHTML = '';
-      
+
       const badgeStyles = {
-        'IMAX': 'background:#1d4ed8; color:#bfdbfe;',
-        '4DX': 'background:#6d28d9; color:#ddd6fe;',
-        'DOLBY': 'background:#065f46; color:#6ee7b7;',
-        'STANDARD': 'background:#374151; color:#9ca3af;'
+        'PREMIERE': 'background:#1d4ed8; color:#bfdbfe;',
+        'CELEBRATION': 'background:#6d28d9; color:#ddd6fe;',
+        'DATE_NIGHT': 'background:#065f46; color:#6ee7b7;',
+        'FAMILY': 'background:#374151; color:#9ca3af;',
+        'SILENT': 'background:#374151; color:#9ca3af;'
       };
 
-      THEATRES.forEach(t => {
+      shows.forEach(show => {
         const card = document.createElement('div');
         card.style.cssText = `
-          background: #1a1a26; border: 1px solid #ffffff0f; 
-          border-radius: 12px; padding: 16px; margin-bottom: 12px;
-        `;
-        
-        card.innerHTML = `
-          <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-            <div>
-              <div style="font-size:15px; font-weight:600; color:#fff; margin-bottom:2px;">${t.name}</div>
-              <div style="font-size:12px; color:var(--muted);">${t.area} · ${t.distance}</div>
-            </div>
-            <div style="text-align:right;">
-              <div style="font-size:10px; font-weight:800; padding:4px 10px; border-radius:4px; text-transform:uppercase; ${badgeStyles[t.screen] || ''}">${t.screen}</div>
-              <div style="font-size:11px; color:var(--muted); margin-top:4px;">${t.snack}</div>
-            </div>
-          </div>
-          
-          <div style="margin-top:8px; font-size:13px; color:var(--gold); font-weight:600;">from ₹${t.ticketBase}</div>
-          
-          <div style="margin-top:10px;">
-            <div style="font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:8px;">Select Show</div>
-            <div style="display:flex; flex-wrap:wrap; gap:6px;">
-              ${t.shows.map(time => `
-                <div class="time-pill" 
-                     onclick="selectShow('${time}', ${t.id})"
-                     style="border:1px solid #C9A84C66; color:#C9A84C; background:transparent; border-radius:20px; padding:4px 12px; font-size:12px; cursor:pointer; transition:200ms;"
-                     onmouseover="this.style.background='#C9A84C'; this.style.color='#000'; this.style.fontWeight='600';"
-                     onmouseout="this.style.background='transparent'; this.style.color='#C9A84C'; this.style.fontWeight='400';">
-                  ${time}
-                </div>
-              `).join('')}
-            </div>
-          </div>
+      background: #1a1a26; border: 1px solid #ffffff0f;
+      border-radius: 12px; padding: 16px; margin-bottom: 12px;
+    `;
 
-          ${t.screen === 'STANDARD' ? `
-            <div style="font-size:11px; color:#C9A84C88; margin-top:10px; display:flex; align-items:center; gap:4px;">
-              💡 Travel 2.1km more → IMAX at PVR ₹380
-            </div>
-          ` : ''}
-        `;
+        const startTime = new Date(show.startTime).toLocaleTimeString('en-IN', {
+          hour: '2-digit', minute: '2-digit'
+        });
+
+        card.innerHTML = `
+      <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+        <div>
+          <div style="font-size:15px; font-weight:600; color:#fff; margin-bottom:2px;">${show.theatreName}</div>
+          <div style="font-size:12px; color:var(--muted);">${show.city}</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:10px; font-weight:800; padding:4px 10px; border-radius:4px; text-transform:uppercase; ${badgeStyles[show.vibe] || ''}">${show.vibe || 'STANDARD'}</div>
+          <div style="font-size:11px; color:var(--muted); margin-top:4px;">${show.availableSeats} seats left</div>
+        </div>
+      </div>
+
+      <div style="margin-top:10px;">
+        <div style="font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:8px;">Select Show</div>
+        <div style="display:flex; flex-wrap:wrap; gap:6px;">
+          <div class="time-pill"
+               onclick="selectShow(${show.id}, '${show.theatreName}', '${startTime}')"
+               style="border:1px solid #C9A84C66; color:#C9A84C; background:transparent; border-radius:20px; padding:4px 12px; font-size:12px; cursor:pointer; transition:200ms;"
+               onmouseover="this.style.background='#C9A84C'; this.style.color='#000'; this.style.fontWeight='600';"
+               onmouseout="this.style.background='transparent'; this.style.color='#C9A84C'; this.style.fontWeight='400';">
+            ${startTime}
+          </div>
+        </div>
+      </div>
+    `;
         list.appendChild(card);
       });
     }
 
-    function selectShow(time, theatreId) {
-      const theatre = THEATRES.find(t => t.id === parseInt(theatreId));
-      window.selectedTheatre = theatre;
-      window.selectedShow = { time, theatreId: parseInt(theatreId) };
-      
-      const movieId = parseInt(window.currentMovie.id);
-      const theatreIndex = parseInt(theatreId); 
-      window.selectedShowId = ((movieId - 1) * 5) + theatreIndex;
-      
-      console.log("--- SHOW SELECTION DEBUG ---");
-      console.log("Movie ID:", movieId, "| Title:", window.currentMovie.title);
-      console.log("Theatre ID:", theatreIndex, "| Name:", theatre.name);
-      console.log("Calculated showId:", window.selectedShowId);
-      
-      openSeatModal(theatre, time);
+    function selectShow(showId, theatreName, timeStr) {
+      state.currentShow = {
+        id: showId,
+        theatreName: theatreName,
+        time: timeStr
+      };
+      window.selectedShowId = showId;
+
+      console.log("Show selected — ID:", showId, "Theatre:", theatreName, "Time:", timeStr);
+
+      openSeatModal({ name: theatreName, area: '' }, timeStr);
     }
 
     // --- Seat Modal ---
-    function openSeatModal(theatre, timeStr) {
+    async function openSeatModal(theatre, timeStr) {
       state.selectedSeats = [];
       window.selectedSeats = new Set();
-      document.getElementById('s-theatre-meta').textContent = `${theatre.name} · ${theatre.area} · ${timeStr}`;
+      document.getElementById('s-theatre-meta').textContent = `${theatre.name} · ${timeStr}`;
       document.getElementById('s-movie-title').textContent = state.currentMovie.title;
       document.getElementById('s-coin-balance').textContent = state.coins;
       
       const grid = document.getElementById('seat-grid');
       grid.innerHTML = '';
-      
-      const rows = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
+
+      const seatData = await api(`/shows/${window.selectedShowId}/seats`);
+      console.log("Seats fetched:", seatData);
+
+      const rows = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
       rows.forEach(r => {
-        // Row Label (Left)
+        const rowSeats = seatData ? seatData.filter(s => s.seatNumber.startsWith(r)) : [];
+
         const rowLabel = document.createElement('div');
         rowLabel.className = 'row-label';
         rowLabel.textContent = r;
         grid.appendChild(rowLabel);
-        
+
         for (let i = 1; i <= 10; i++) {
+          const seatInfo = rowSeats.find(s => s.seatNumber === `${r}${i}`);
           const seat = document.createElement('div');
-          const id = `${r}${i}`;
-          const isBooked = Math.random() < 0.2;
+          const isBooked = seatInfo ? seatInfo.status === 'BOOKED' : false;
+          const realSeatId = seatInfo ? seatInfo.id : null;
+
           seat.className = `seat ${isBooked ? 'booked' : 'available'}`;
-          
           seat.innerHTML = `
-            <svg viewBox="0 0 36 32">
-              <rect class="s-back" x="2" y="2" width="32" height="16" rx="5"/>
-              <rect class="s-cushion" x="4" y="16" width="28" height="10" rx="3"/>
-              <rect class="s-leg" x="5" y="25" width="4" height="5" rx="1"/>
-              <rect class="s-leg" x="27" y="25" width="4" height="5" rx="1"/>
-              <rect class="s-arm" x="0" y="8" width="4" height="14" rx="2"/>
-              <rect class="s-arm" x="32" y="8" width="4" height="14" rx="2"/>
-            </svg>
-          `;
-          
-          if (!isBooked) seat.onclick = () => toggleSeat(seat, id, r);
+      <svg viewBox="0 0 36 32">
+        <rect class="s-back" x="2" y="2" width="32" height="16" rx="5"/>
+        <rect class="s-cushion" x="4" y="16" width="28" height="10" rx="3"/>
+        <rect class="s-leg" x="5" y="25" width="4" height="5" rx="1"/>
+        <rect class="s-leg" x="27" y="25" width="4" height="5" rx="1"/>
+        <rect class="s-arm" x="0" y="8" width="4" height="14" rx="2"/>
+        <rect class="s-arm" x="32" y="8" width="4" height="14" rx="2"/>
+      </svg>
+    `;
+
+          if (!isBooked && realSeatId) {
+            seat.onclick = () => toggleSeat(seat, realSeatId, `${r}${i}`, r);
+          }
           grid.appendChild(seat);
         }
 
-        // Zone Tag (Right)
         const zoneTag = document.createElement('div');
         if (['A', 'B'].includes(r)) { zoneTag.className = 'zone-tag gold'; zoneTag.textContent = 'PREMIUM'; }
-        else if (['C', 'D', 'E'].includes(r)) { zoneTag.className = 'zone-tag muted'; zoneTag.textContent = 'EXECUTIVE'; }
+        else if (['C', 'D', 'E', 'F', 'G'].includes(r)) { zoneTag.className = 'zone-tag muted'; zoneTag.textContent = 'EXECUTIVE'; }
         else { zoneTag.className = 'zone-tag muted'; zoneTag.textContent = 'STANDARD'; }
         grid.appendChild(zoneTag);
       });
@@ -1128,14 +1134,11 @@
       updateSeatSummary();
     }
 
-    function toggleSeat(el, id, row) {
-      const localId = parseInt(id.replace(/[^\d]/g, '')) + (row.charCodeAt(0) - 65) * 10;
-      const seatId = ((window.selectedShowId - 1) * 70) + localId;
-      
+    function toggleSeat(el, seatId, seatLabel, row) {
       let price = 180;
       let zone = 'Standard';
       if (['A','B'].includes(row)) { price = 350; zone = 'Premium'; }
-      else if (['C','D','E'].includes(row)) { price = 250; zone = 'Executive'; }
+      else if (['C','D','E','F','G'].includes(row)) { price = 250; zone = 'Executive'; }
 
       if (window.selectedSeats.has(seatId)) {
         window.selectedSeats.delete(seatId);
@@ -1144,7 +1147,7 @@
       } else {
         if (window.selectedSeats.size >= 10) return toast("Max 10 seats allowed", "error");
         window.selectedSeats.add(seatId);
-        state.selectedSeats.push({ id: seatId, price, zone });
+        state.selectedSeats.push({ id: seatId, label: seatLabel, price, zone });
         el.classList.add('selected');
       }
       updateSeatSummary();

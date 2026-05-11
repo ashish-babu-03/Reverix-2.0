@@ -8,18 +8,16 @@ import java.time.LocalDateTime
 data class ShowEntity(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
-    val movieId: Long,
-    val theatreId: Long,
     val startTime: LocalDateTime,
     val endTime: LocalDateTime,
     val totalSeats: Int,
     val availableSeats: Int,
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "movieId", insertable = false, updatable = false)
-    val movie: MovieEntity? = null,
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "movie_id")
+    val movie: MovieEntity,
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "theatreId", insertable = false, updatable = false)
-    val theatre: TheatreEntity? = null
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "theatre_id")
+    val theatre: TheatreEntity
 )

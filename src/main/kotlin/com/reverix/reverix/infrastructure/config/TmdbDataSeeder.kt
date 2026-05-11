@@ -78,7 +78,6 @@ class TmdbDataSeeder(
                     logger.info("Data already seeded, skipping...")
                     return@Thread
                 }
-
                 logger.info("Fetching real movie data from TMDb in background...")
                 seedMoviesFromTmdb()
                 seedTheatres()
@@ -121,14 +120,17 @@ class TmdbDataSeeder(
                         .retrieve()
                         .bodyToMono(TmdbMovieDetail::class.java)
                         .block()
-                    
+
                     val runtime = detail?.runtime ?: 120
                     val actualRuntime = if (runtime == 0) 120 else runtime
 
-                    val tags = tmdbMovie.genreIds.flatMap { genreMap[it]?.second ?: emptyList() }.toSet().joinToString(",")
-                    val genreName = tmdbMovie.genreIds.firstOrNull()?.let { genreMap[it]?.first } ?: "Unknown"
+                    val tags = tmdbMovie.genreIds
+                        .flatMap { genreMap[it]?.second ?: emptyList() }
+                        .toSet().joinToString(",")
+                    val genreName = tmdbMovie.genreIds.firstOrNull()
+                        ?.let { genreMap[it]?.first } ?: "Unknown"
 
-                    val movieEntity = MovieEntity(
+                    fetchedMovies.add(MovieEntity(
                         title = tmdbMovie.title,
                         genre = genreName,
                         moodTags = tags.ifEmpty { "thoughtful" },
@@ -136,9 +138,7 @@ class TmdbDataSeeder(
                         rating = tmdbMovie.voteAverage,
                         duration = actualRuntime,
                         posterUrl = "$tmdbPosterBaseUrl${tmdbMovie.posterPath}"
-                    )
-
-                    fetchedMovies.add(movieEntity)
+                    ))
                     seenTitles.add(tmdbMovie.title)
 
                 } catch (e: Exception) {
@@ -147,29 +147,9 @@ class TmdbDataSeeder(
             }
         }
 
-        if (fetchedMovies.isEmpty()) {
-            throw RuntimeException("No movies fetched from TMDb")
-        }
-
+        if (fetchedMovies.isEmpty()) throw RuntimeException("No movies fetched from TMDb")
         movieJpaRepository.saveAll(fetchedMovies)
         logger.info("Fetched and saved ${fetchedMovies.size} movies from TMDb")
-    }
-
-    private fun seedHardcodedFallback() {
-        if (movieJpaRepository.count() > 0) return
-        val movies = listOf(
-            MovieEntity(title = "Inception", genre = "Sci-Fi", moodTags = "mind-bending,thoughtful,intense", language = "en", rating = 8.8, duration = 148, posterUrl = "$tmdbPosterBaseUrl/9gk7adZA2GLz2mXJIVieDvCpLs6.jpg"),
-            MovieEntity(title = "Interstellar", genre = "Sci-Fi", moodTags = "epic,emotional,thoughtful", language = "en", rating = 8.6, duration = 169, posterUrl = "$tmdbPosterBaseUrl/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg"),
-            MovieEntity(title = "The Dark Knight", genre = "Action", moodTags = "intense,dark,thrilling", language = "en", rating = 9.0, duration = 152, posterUrl = "$tmdbPosterBaseUrl/qJ2tW6WMUDux911r6m7haRef0WH.jpg"),
-            MovieEntity(title = "Avatar", genre = "Sci-Fi", moodTags = "epic,adventurous,excited", language = "en", rating = 7.8, duration = 162, posterUrl = "$tmdbPosterBaseUrl/jRXYjXNq0Cs2TcJjLkki24MLp7u.jpg"),
-            MovieEntity(title = "The Avengers", genre = "Action", moodTags = "excited,epic,energetic", language = "en", rating = 8.0, duration = 143, posterUrl = "$tmdbPosterBaseUrl/RYMX2wcKCBAr24UyPD7xwmja8y.jpg"),
-            MovieEntity(title = "Titanic", genre = "Romance", moodTags = "romantic,emotional,sad", language = "en", rating = 7.8, duration = 195, posterUrl = "$tmdbPosterBaseUrl/9xjZS2rlVxm8SFx8kPC3aIGCOYQ.jpg"),
-            MovieEntity(title = "The Matrix", genre = "Sci-Fi", moodTags = "mind-bending,intense,thrilling", language = "en", rating = 8.7, duration = 136, posterUrl = "$tmdbPosterBaseUrl/f89U3ADr1oiB1s9GkdPOEpXUk5H.jpg"),
-            MovieEntity(title = "Gladiator", genre = "Action", moodTags = "epic,emotional,intense", language = "en", rating = 8.5, duration = 155, posterUrl = "$tmdbPosterBaseUrl/ty8TGRuvJLPUmAR1H1nRIsgwvim.jpg"),
-            MovieEntity(title = "Jurassic Park", genre = "Adventure", moodTags = "thrilling,excited,scared", language = "en", rating = 8.1, duration = 127, posterUrl = "$tmdbPosterBaseUrl/9i3plLlDPcftn4ZebK3aXQdEaF2.jpg"),
-            MovieEntity(title = "The Lion King", genre = "Animation", moodTags = "happy,emotional,family", language = "en", rating = 8.5, duration = 88, posterUrl = "$tmdbPosterBaseUrl/sKCr78AS8o6P4bK0e008m73I4vP.jpg")
-        )
-        movieJpaRepository.saveAll(movies)
     }
 
     private fun seedTheatres() {
@@ -187,26 +167,27 @@ class TmdbDataSeeder(
 
     private fun seedShowsAndSeats() {
         if (showJpaRepository.count() > 0) return
-        
+
         val movies = movieJpaRepository.findAll()
         val theatres = theatreJpaRepository.findAll()
-        
+
         val showsToSave = mutableListOf<ShowEntity>()
         val tomorrow = LocalDateTime.now().plusDays(1)
 
         movies.forEach { movie ->
             val cityTheatres = theatres.groupBy { it.city }
             val firstCityTheatres = cityTheatres.values.firstOrNull() ?: theatres
-            
+
             val t1 = firstCityTheatres.getOrNull(0)
             val t2 = firstCityTheatres.getOrNull(1)
 
             if (t1 != null) {
                 showsToSave.add(ShowEntity(
-                    movieId = movie.id,
-                    theatreId = t1.id,
+                    movie = movie,
+                    theatre = t1,
                     startTime = tomorrow.withHour(10).withMinute(0).withSecond(0),
-                    endTime = tomorrow.withHour(10).withMinute(0).withSecond(0).plusMinutes(movie.duration.toLong()),
+                    endTime = tomorrow.withHour(10).withMinute(0).withSecond(0)
+                        .plusMinutes(movie.duration.toLong()),
                     totalSeats = 100,
                     availableSeats = 100
                 ))
@@ -214,10 +195,11 @@ class TmdbDataSeeder(
 
             if (t2 != null) {
                 showsToSave.add(ShowEntity(
-                    movieId = movie.id,
-                    theatreId = t2.id,
+                    movie = movie,
+                    theatre = t2,
                     startTime = tomorrow.withHour(18).withMinute(0).withSecond(0),
-                    endTime = tomorrow.withHour(18).withMinute(0).withSecond(0).plusMinutes(movie.duration.toLong()),
+                    endTime = tomorrow.withHour(18).withMinute(0).withSecond(0)
+                        .plusMinutes(movie.duration.toLong()),
                     totalSeats = 100,
                     availableSeats = 100
                 ))
@@ -225,10 +207,10 @@ class TmdbDataSeeder(
         }
 
         val savedShows = showJpaRepository.saveAll(showsToSave)
-        
+
         val seatsToSave = mutableListOf<SeatEntity>()
         val rows = listOf("A", "B", "C", "D", "E", "F", "G", "H", "I", "J")
-        
+
         savedShows.forEach { show ->
             rows.forEach { row ->
                 for (i in 1..10) {
@@ -237,18 +219,17 @@ class TmdbDataSeeder(
                         "D", "E", "F", "G" -> "MIDDLE"
                         else -> "BACK"
                     }
-                    seatsToSave.add(
-                        SeatEntity(
-                            showId = show.id,
-                            seatNumber = "$row$i",
-                            zone = zone,
-                            status = "AVAILABLE"
-                        )
-                    )
+                    seatsToSave.add(SeatEntity(
+                        show = show,
+                        seatNumber = "$row$i",
+                        zone = zone,
+                        status = "AVAILABLE"
+                    ))
                 }
             }
         }
-        
+
         seatJpaRepository.saveAll(seatsToSave)
+        logger.info("Seeded ${savedShows.size} shows and ${seatsToSave.size} seats")
     }
 }
