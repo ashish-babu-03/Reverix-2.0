@@ -1,8 +1,12 @@
 package com.reverix.reverix.infrastructure.web.rest
 
+import org.slf4j.LoggerFactory
 import org.springframework.data.redis.core.RedisTemplate
+import org.springframework.scheduling.annotation.Scheduled
+import org.springframework.stereotype.Component
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.client.RestTemplate
 import javax.sql.DataSource
 
 @RestController
@@ -29,5 +33,24 @@ class HealthController(
             "redis" to redisStatus,
             "timestamp" to System.currentTimeMillis()
         )
+    }
+}
+
+@Component
+class SelfPingScheduler {
+    private val logger = LoggerFactory.getLogger(SelfPingScheduler::class.java)
+    private val restTemplate = RestTemplate()
+
+    @Scheduled(fixedDelay = 840000) // every 14 minutes
+    fun ping() {
+        try {
+            val response = restTemplate.getForEntity(
+                "https://reverix-2-0.onrender.com/api/health",
+                String::class.java
+            )
+            logger.info("Self ping successful: ${response.statusCode}")
+        } catch (ex: Exception) {
+            logger.error("Self ping failed: ${ex.message}")
+        }
     }
 }
